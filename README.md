@@ -18,3 +18,22 @@ Secure Authentication – Robust session-based login system with sensitive data 
 Expense Summaries – View detailed daily, weekly, and monthly financial reports
 
 User-Friendly UI – Clean, intuitive interface for efficient navigation and management
+
+
+
+# How to run
+
+git clone https://github.com/msvardhan32/MyKhata
+cd mykhata
+
+
+
+npm install
+
+
+PORT=5000
+MONGO_URI=your-mongodb-uri
+SESSION_SECRET=your-secret-key
+
+
+npm start
