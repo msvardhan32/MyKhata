@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multi-Select Dropdown</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown-btn {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: white;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        z-index: 1;
+        border-radius: 5px;
+        width: 200px;
+      }
+
+      .dropdown-menu label {
+        display: block;
+        padding: 5px 0;
+        cursor: pointer;
+      }
+
+      .dropdown-menu label:hover {
+        background-color: #f1f1f1;
+      }
+
+      .dropdown-btn:hover + .dropdown-menu,
+      .dropdown-menu:hover {
+        display: block;
+      }
+
+      #selected-options {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dropdown">
+      <button class="dropdown-btn">Select Options</button>
+      <div class="dropdown-menu">
+        <label><input type="checkbox" value="Option 1" /> Option 1</label>
+        <label><input type="checkbox" value="Option 2" /> Option 2</label>
+        <label><input type="checkbox" value="Option 3" /> Option 3</label>
+        <label><input type="checkbox" value="Option 4" /> Option 4</label>
+      </div>
+    </div>
+    <p>Selected: <span id="selected-options">None</span></p>
+
+    <script>
+      const dropdownMenu = document.querySelector(".dropdown-menu");
+      const selectedOptions = document.getElementById("selected-options");
+      const checkboxes = dropdownMenu.querySelectorAll(
+        'input[type="checkbox"]'
+      );
+
+      checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", () => {
+          const selected = Array.from(checkboxes)
+            .filter((checkbox) => checkbox.checked)
+            .map((checkbox) => checkbox.value);
+
+          selectedOptions.textContent = selected.length
+            ? selected.join(", ")
+            : "None";
+        });
+      });
+    </script>
+  </body>
+</html>

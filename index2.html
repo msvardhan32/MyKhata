@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dues</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+      .navbar-brand {
+        font-weight: bold;
+        color: #007bff;
+      }
+      .nav-link {
+        color: #007bff !important;
+      }
+      .dues-item {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        padding: 1rem;
+      }
+      .amount-positive {
+        color: green;
+        font-weight: bold;
+      }
+      .amount-negative {
+        color: red;
+        font-weight: bold;
+      }
+      .collapse-content {
+        margin-top: 1rem;
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+      .pending-requests {
+        margin-top: 1rem;
+      }
+      .pending-requests h6 {
+        margin-bottom: 0.5rem;
+      }
+      .pending-requests ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      .pending-requests li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 0.5rem;
+      }
+      .pending-requests .btn {
+        font-size: 0.9rem;
+      }
+      .total {
+        font-weight: bold;
+        margin-top: 1rem;
+        text-align: right;
+      }
+      .total .amount-positive {
+        color: green;
+      }
+      .total .amount-negative {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-4">
+      <h5>Dues</h5>
+      <div class="dues-item">
+        <div
+          class="d-flex justify-content-between align-items-center"
+          data-bs-toggle="collapse"
+          data-bs-target="#due1"
+          aria-expanded="false"
+          style="cursor: pointer"
+        >
+          <span>John Doe</span>
+          <span class="amount-positive">$50.00</span>
+        </div>
+        <div id="due1" class="collapse collapse-content">
+          <div class="pending-requests">
+            <h6>Requests You Received:</h6>
+            <ul>
+              <li>
+                Request 1: $20.00
+                <div>
+                  <button class="btn btn-success btn-sm">Approve</button>
+                  <button class="btn btn-danger btn-sm">Reject</button>
+                </div>
+              </li>
+              <li>
+                Request 2: $30.00
+                <div>
+                  <button class="btn btn-success btn-sm">Approve</button>
+                  <button class="btn btn-danger btn-sm">Reject</button>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="pending-requests">
+            <h6>Requests You Sent:</h6>
+            <ul>
+              <li>Request 1: $10.00 <span class="text-muted">Pending</span></li>
+              <li>Request 2: $15.00 <span class="text-muted">Pending</span></li>
+            </ul>
+          </div>
+          <form>
+            <div class="mb-3">
+              <label for="amount1" class="form-label">Amount to credit:</label>
+              <input
+                type="number"
+                class="form-control"
+                id="amount1"
+                placeholder="Enter amount"
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="dues-item">
+        <div
+          class="d-flex justify-content-between align-items-center"
+          data-bs-toggle="collapse"
+          data-bs-target="#due2"
+          aria-expanded="false"
+          style="cursor: pointer"
+        >
+          <span>Jane Smith</span>
+          <span class="amount-negative">-$30.00</span>
+        </div>
+        <div id="due2" class="collapse collapse-content">
+          <div class="pending-requests">
+            <h6>Requests You Received:</h6>
+            <ul>
+              <li>
+                Request 1: $10.00
+                <div>
+                  <button class="btn btn-success btn-sm">Approve</button>
+                  <button class="btn btn-danger btn-sm">Reject</button>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="pending-requests">
+            <h6>Requests You Sent:</h6>
+            <ul>
+              <li>Request 1: $20.00 <span class="text-muted">Pending</span></li>
+            </ul>
+          </div>
+          <form>
+            <div class="mb-3">
+              <label for="amount2" class="form-label">Amount to credit:</label>
+              <input
+                type="number"
+                class="form-control"
+                id="amount2"
+                placeholder="Enter amount"
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="total">
+        Total: <span class="amount-positive">$20.00</span>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
