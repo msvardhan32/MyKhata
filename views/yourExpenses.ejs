@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Expenses</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/home.css" />
+    <style>
+      .expense-card {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+      }
+      .expense-summary {
+        display: flex;
+        justify-content: space-between;
+        text-align: center;
+      }
+      .summary-item {
+        flex: 1;
+        padding: 0.5rem;
+        border-right: 1px solid #ddd;
+      }
+      .summary-item:last-child {
+        border-right: none;
+      }
+      .summary-item h6 {
+        font-size: 1rem;
+        color: #555;
+      }
+      .summary-item p {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #007bff;
+      }
+      .expense-list {
+        list-style-type: none;
+        padding: 0;
+      }
+      .expense-header {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+      }
+      .expense-details {
+        background-color: #f1f1f1;
+        border: 1px solid #ddd;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        padding: 1rem;
+        display: none;
+      }
+      .expense-details.show {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./includes/nav.ejs') %> <% const f = new
+    Intl.DateTimeFormat('en-US', { year: "numeric", month: "short", day:
+    "numeric", weekday: "short", })
+    const formatter =
+    new Intl.NumberFormat('en-IN'); %>
+    <div class="container mt-4">
+      <div class="expense-card">
+        <h5 class="mb-4">Summary</h5>
+        <% let today=0; let week =0; const curr = new Date(); const first =
+        curr.getDate() - curr.getDay();
+        let month=0; %>
+        <div class="expense-summary">
+          <div class="summary-item">
+            <h6>Today</h6>
+            <p id="#today"><%= today %></p>
+          </div>
+          <div class="summary-item">
+            <h6>This Week</h6>
+            <p id="#week">210.00</p>
+          </div>
+          <div class="summary-item">
+            <h6>This Month</h6>
+            <p id="#month">$750.00</p>
+          </div>
+        </div>
+      </div>
+
+      <h5>Recent Expenses</h5>
+      <ul class="expense-list">
+        <% expenses.forEach((expense,index) => {%>
+        <li>
+          <% const id = 'expense'+index; %>
+          <div
+            class="expense-header"
+            data-bs-toggle="collapse"
+            data-bs-target="<%= '#'+id %>"
+            aria-expanded="false"
+          >
+            <% if(f.format(expense.date)==f.format(curr)){ today= 1*today +
+            1*expense.amount; }
+            if(expense.date.getFullYear()==curr.getFullYear() &&
+            expense.date.getMonth()==curr.getMonth() && expense.date.getDate()>=first){
+            week=1*week + 1*(expense.amount);} %>
+            <% if(expense.date.getFullYear()==curr.getFullYear() &&
+            expense.date.getMonth()==curr.getMonth()){
+              month=1*month + 1*expense.amount;
+            } %>
+            <span><%= f.format(expense.date) %></span>
+            <span><%= expense.name %></span>
+            <span>&#8377 <%=formatter.format(expense.amount)%></span>
+          </div>
+          <div id="<%=id%>" class="collapse expense-details">
+            <p><strong>Description:</strong> <%= expense.description %></p>
+            <p>
+              <strong>Paid By:</strong> <%=
+              (expense.paidBy===user)?'You':expense.paidBy %>
+            </p>
+          </div>
+        </li>
+        <%}); %>
+        <input id="todayid" type="number" value="<%=today%>" hidden />
+        <input id="weekid" type="number" value="<%=week%>" hidden />
+        <input id="monthid" type="number" value="<%=month%>" hidden />
+      </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const formatter = new Intl.NumberFormat('en-IN');
+      const todayAmount = document.getElementById("todayid").value;
+      document.getElementById("#today").innerHTML = "&#8377 " + formatter.format(todayAmount);
+      const weekAmount = document.getElementById("weekid").value;
+      document.getElementById("#week").innerHTML = "&#8377 " + formatter.format(weekAmount);
+      const monthAmount = document.getElementById("monthid").value;
+      document.getElementById("#month").innerHTML = "&#8377 " + formatter.format(monthAmount);
+    </script>
+  </body>
+</html>

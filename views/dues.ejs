@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dues</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/home.css" />
+    <style>
+      .dues-list {
+        list-style-type: none;
+        padding: 0;
+      }
+      .dues-item {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        padding: 1rem;
+      }
+      .amount-positive {
+        color: green;
+        font-weight: bold;
+      }
+      .amount-negative {
+        color: red;
+        font-weight: bold;
+      }
+      .collapse-content {
+        margin-top: 1rem;
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+      .pending-requests {
+        margin-top: 1rem;
+      }
+      .pending-requests h6 {
+        margin-bottom: 0.5rem;
+      }
+      .pending-requests ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      .pending-requests li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 0.5rem;
+      }
+      .pending-requests .btn {
+        font-size: 0.9rem;
+      }
+      .total {
+        font-weight: bold;
+        margin-top: 1rem;
+        text-align: right;
+      }
+      .total .amount-positive {
+        color: green;
+      }
+      .total .amount-negative {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./includes/nav.ejs') %> <% let due=0; %> <% const formatter =
+    new Intl.NumberFormat('en-IN'); %>
+    <div class="container mt-4">
+      <h5>Dues</h5>
+      <div class="dues-list">
+        <% if(friends.length>0){ %> <% friends.forEach((friend,index)=>{ %> <%
+        if(friend.due!=0){%>
+        <div class="dues-item">
+          <div
+            class="d-flex justify-content-between align-items-center"
+            data-bs-toggle="collapse"
+            data-bs-target="<%= '#due'+index%>"
+            aria-expanded="false"
+            style="cursor: pointer"
+          >
+            <span
+              ><%= friend.friend1===userName ? friend.friend2:friend.friend1
+              %></span
+            >
+            <% if( ((friend.friend1===userName ?1:-1)*(friend.due))>=0){%>
+            <%due+=(friend.friend1===userName ?1:-1)*(friend.due) %>
+            <span class="amount-positive"
+              >&#8377 <%=formatter.format((friend.friend1===userName
+              ?1:-1)*(friend.due))%></span
+            >
+            <%}else{ %> <%due+=(friend.friend1===userName ?1:-1)*(friend.due) %>
+            <span class="amount-negative"
+              >&#8377 <%=formatter.format((friend.friend1===userName
+              ?1:-1)*(friend.due))%></span
+            >
+            <% }%>
+          </div>
+          <div id="<%= 'due'+index%>" class="collapse collapse-content">
+            <div class="pending-requests">
+              <h6>Requests You Received:</h6>
+              <%if(friend.requests.length>0){%>
+              <ul>
+                <% friend.requests.forEach(request=>{%> <%
+                if(request.reciever===userName && request.status ===
+                'pending'){%>
+                <li>
+                  Amount Received:&#8377 <%= formatter.format(request.amount)%>
+                  <div>
+                    <form
+                      action="dues/approve/<%=request._id%>"
+                      method="post"
+                      style="display: inline-block"
+                    >
+                      <input
+                        type="text"
+                        name="friend"
+                        value="<%= friend.friend1===userName ? friend.friend2:friend.friend1
+                %>"
+                        hidden
+                      />
+                      <button type="submit" class="btn btn-success btn-sm">
+                        Approve
+                      </button>
+                    </form>
+                    <form
+                      action="dues/reject/<%=request._id%>"
+                      method="post"
+                      style="display: inline-block"
+                    >
+                      <input
+                        type="text"
+                        name="friend"
+                        value="<%= friend.friend1===userName ? friend.friend2:friend.friend1
+                %>"
+                        hidden
+                      />
+                      <button type="submit" class="btn btn-danger btn-sm">
+                        Reject
+                      </button>
+                    </form>
+                  </div>
+                </li>
+                <%}})%>
+              </ul>
+              <%}else{%> None <%}%>
+            </div>
+            <div class="pending-requests">
+              <h6>Requests You Sent:</h6>
+              <%if(friend.requests.length>0){%>
+              <ul>
+                <% friend.requests.forEach(request=>{%> <%
+                if(request.sender===userName){%>
+                <li>
+                  Amount paid: &#8377 <%=formatter.format(request.amount)%>
+                  <%
+                    let clscolour;
+                    if(request.status==='approved'){
+                      clscolour='text-success'
+                    }else if(request.status==='reject'){
+                      clscolour='text-danger'
+                    }else{
+                      clscolour='text-muted'
+                    }
+                  %>
+                  <span class="<%=clscolour%>"><%= request.status%></span>
+                  <form
+                    action="dues/clear/<%=request._id%>"
+                    method="post"
+                    style="display: inline-block"
+                  >
+                    <input
+                      type="text"
+                      name="friend"
+                      value="<%= friend.friend1===userName ? friend.friend2:friend.friend1
+                %>"
+                      hidden
+                    />
+                    <button type="submit" class="btn btn-danger btn-sm">
+                      Clear
+                    </button>
+                  </form>
+                </li>
+                <%}})%>
+              </ul>
+              <%}else{%> None <%}%>
+            </div>
+            <% if( ((friend.friend1===userName ?1:-1)*(friend.due))<0){%>
+            <form method="post" action="dues/creditAmount">
+              <div class="mb-3">
+                <label for="amount1" class="form-label"
+                  >Amount to credit:</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="amount1"
+                  placeholder="Enter amount"
+                  name="creditAmount"
+                />
+                <input
+                  type="text"
+                  name="friend"
+                  value="<%= friend.friend1===userName ? friend.friend2:friend.friend1
+                %>"
+                  hidden
+                />
+                <input type="text" name="user" value="<%= userName%>" hidden />
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <%}%>
+          </div>
+        </div>
+        <%} %> <%}) %> <% }else{ %>
+        <div class="dues-item">
+          <span>No Dues</span>
+        </div>
+        <% } %>
+      </div>
+      <div class="total">
+        Total:
+        <span class="<%= (due>=0)?'amount-positive':'amount-negative' %>"
+          >&#8377 <%= formatter.format(due) %></span
+        >
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Expenses</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/home.css" />
+    <style>
+      .form-container {
+        background-color: white;
+        padding: 2rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./includes/nav') %>
+
+    <div class="container mt-4">
+      <h5>Add Expense</h5>
+      <div class="form-container">
+        <form id="addExpenseForm" action="/addExpense" method="post">
+          <div class="mb-3">
+            <label for="expenseName" class="form-label">Expense Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="expenseName"
+              name="expenseName"
+              placeholder="Enter expense name"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="expenseDescription" class="form-label"
+              >Expense Description</label
+            >
+            <textarea
+              class="form-control"
+              id="expenseDescription"
+              name="expenseDescription"
+              rows="3"
+              placeholder="Enter a description"
+              required
+            ></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="expenseDate" class="form-label">Expense Date</label>
+            <input
+              type="date"
+              class="form-control"
+              id="expenseDate"
+              name="expenseDate"
+              placeholder="Enter Date"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="expenseType" class="form-label">Choose Option</label>
+            <select
+              class="form-select"
+              id="expenseType"
+              name="expenseType"
+              required
+            >
+              <option value="">Select</option>
+              <option value="self">Self</option>
+              <option value="friends">Friends</option>
+              <option value="friendGroup">Friend Group</option>
+            </select>
+          </div>
+
+          <!-- Self Expense -->
+          <div id="selfExpense" class="hidden">
+            <div class="mb-3">
+              <label for="selfCost" class="form-label">Cost of Expense</label>
+              <input
+                type="number"
+                class="form-control"
+                id="selfCost"
+                name="selfCost"
+                placeholder="Enter cost"
+                required
+                value="0"
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+
+          <!-- Friends Expense -->
+          <div id="friendsExpense" class="hidden">
+            <div class="mb-3">
+              <label class="form-label">Select Friends</label>
+              <ul class="list-group">
+                <% friends.forEach(friend=>{ %>
+                <li class="list-group-item">
+                  <input
+                    type="checkbox"
+                    class="form-check-input me-2"
+                    name="friend"
+                    value="<%= friend.friend1===userName ?
+                    friend.friend2:friend.friend1; %>"
+                  />
+                  <%= friend.friend1===userName ? friend.friend2:friend.friend1;
+                  %>
+                  <span class="ms-auto">
+                    <input
+                      type="radio"
+                      name="<%= friend.friend1===userName ?
+                    friend.friend2:friend.friend1; %>"
+                      value="non-vg"
+                    />
+                    Non-VG
+                    <input
+                      type="radio"
+                      name="<%= friend.friend1===userName ?
+                    friend.friend2:friend.friend1; %>"
+                      value="vg"
+                      class="ms-2"
+                    />
+                    VG
+                  </span>
+                </li>
+                <%}) %>
+              </ul>
+            </div>
+            <div class="mb-3">
+              <label for="nvCostInput" class="form-label"
+                >Enter Non-Veg Cost</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="nvCostInput"
+                name="nvCostInput"
+                placeholder="Enter NV cost"
+                required
+                value="0"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="vgCostInput" class="form-label">Enter Veg Cost</label>
+              <input
+                type="number"
+                class="form-control"
+                id="vgCostInput"
+                name="vgCostInput"
+                placeholder="Enter VG cost"
+                required
+                value="0"
+              />
+            </div>
+            <!-- <div class="mb-3">
+              <label class="form-label">Calculated Costs Per Person</label>
+              <p>NV Cost Per Person: <span id="nvCost">0</span></p>
+              <p>VG Cost Per Person: <span id="vgCost">0</span></p>
+            </div> -->
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+
+          <!-- Friend Group Expense -->
+          <div id="friendGroupExpense" class="hidden">
+            <div class="mb-3">
+              <label class="form-label">Select Friend Group</label>
+              <select class="form-select" id="groupSelect" name="groupSelect">
+                <option value="">Select Group</option>
+                <% groups.forEach(grp=>{ %>
+                <option value="<%= grp.group.Name %>">
+                  <%= grp.group.Name %>
+                </option>
+                <%}) %>
+              </select>
+            </div>
+            <div id="groupMembers">
+              <% groups.forEach(grp=>{%>
+              <div id="<%= grp.group.Name %>" class="groupfriendslist hidden">
+                <label class="form-label">Select Friends</label>
+                <ul class="list-group">
+                  <% grp.group.friends.forEach(friend=>{ %>
+                  <li class="list-group-item">
+                    <input
+                      type="checkbox"
+                      class="form-check-input me-2"
+                      name="Grpfriend"
+                      checked
+                      value="<%= friend.userName%>"
+                    />
+                    <%= friend.userName%>
+                    <span class="ms-auto">
+                      <input
+                        type="radio"
+                        name="<%= friend.userName%>"
+                        value="nv"
+                      />
+                      Non-VG
+                      <input
+                        type="radio"
+                        name="<%= friend.userName%>"
+                        value="vg"
+                        class="ms-2"
+                      />
+                      VG
+                    </span>
+                  </li>
+                  <%}) %>
+                </ul>
+              </div>
+              <%}) %>
+            </div>
+            <div class="mb-3">
+              <label for="nvGroupCostInput" class="form-label"
+                >Enter Non-Veg Cost</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="nvGroupCostInput"
+                name="nvGroupCostInput"
+                placeholder="Enter NV cost"
+                required
+                value="0"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="vgGroupCostInput" class="form-label"
+                >Enter Veg Cost</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="vgGroupCostInput"
+                name="vgGroupCostInput"
+                placeholder="Enter VG cost"
+                required
+                value="0"
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/expenses.js"></script>
+  </body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Friends & Groups</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/home.css" />
+    <style>
+      .collapsible-container {
+        margin-top: 2rem;
+      }
+      .btn-view,
+      .btn-delete {
+        margin-left: 10px;
+      }
+      .add-buttons {
+        margin-top: 2rem;
+      }
+      .add-friend-form,
+      .add-group-form {
+        margin-top: 1rem;
+        padding: 1rem;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./includes/nav.ejs') %>
+    <div class="container collapsible-container">
+      <div class="accordion" id="friendsGroupsAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="friendsGroupsHeading">
+            <button
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#friendsGroupsList"
+              aria-expanded="true"
+              aria-controls="friendsGroupsList"
+            >
+              Friends Groups
+            </button>
+          </h2>
+          <div
+            id="friendsGroupsList"
+            class="accordion-collapse collapse show"
+            aria-labelledby="friendsGroupsHeading"
+            data-bs-parent="#friendsGroupsAccordion"
+          >
+            <div class="accordion-body">
+              <div class="accordion" id="groupAccordion">
+                <% groups.forEach((groupObj,index)=>{%>
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="<%='groupHeading' +index %>">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="<%= '#groupMembers'+index %>"
+                      aria-expanded="false"
+                      aria-controls="<%= 'groupMembers'+index %>"
+                    >
+                      <%= groupObj.group.Name %>
+                    </button>
+                  </h2>
+                  <div
+                    id="<%= 'groupMembers'+index %>"
+                    class="accordion-collapse collapse"
+                    aria-labelledby="<%='groupHeading' +index %>"
+                    data-bs-parent="#groupAccordion"
+                  >
+                    <div class="accordion-body">
+                      <ul class="list-group">
+                        <% groupObj.group.friends.forEach(friend=>{%>
+                        <li class="list-group-item"><%= friend.userName %></li>
+                        <%}) %>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <%}) %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item mt-3">
+          <h2 class="accordion-header" id="friendsHeading">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#friendsList"
+              aria-expanded="false"
+              aria-controls="friendsList"
+            >
+              Friends
+            </button>
+          </h2>
+          <div
+            id="friendsList"
+            class="accordion-collapse collapse"
+            aria-labelledby="friendsHeading"
+            data-bs-parent="#friendsGroupsAccordion"
+          >
+            <div class="accordion-body">
+              <ul class="list-group">
+                <% if(friends.length>0){ %> <% friends.forEach(friend=>{ %>
+                <li
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <%= friend.friend1===userName ? friend.friend2:friend.friend1;
+                  %>
+                  <!-- <button class="btn btn-danger btn-delete">Delete</button> -->
+                </li>
+                <%}) %> <% }else{ %>
+                <li
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  No Friends
+                </li>
+                <% } %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="add-buttons">
+        <% if(frienderror){%>
+        <div class="flashMessage alert alert-danger" role="alert">
+          <%= frienderror %>
+        </div>
+        <%}%>
+        <div class="add-friend-form">
+          <h5>Add a Friend</h5>
+          <form method="post" action="addFriend">
+            <div class="mb-3">
+              <label for="friendName" class="form-label"
+                >Friend's Username</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="friendName"
+                placeholder="Enter friend's username"
+                name="userName"
+                requiredcls
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Add Friend</button>
+          </form>
+        </div>
+        <% if(grperror){%>
+        <div class="alert alert-danger" style="margin-top: 1rem" role="alert">
+          <%= grperror %>
+        </div>
+        <%}%>
+        <div class="add-group-form mt-4">
+          <h5>Add a Friend Group</h5>
+          <form method="post" action="/addGrp">
+            <input type="text" name="friends" value="<%= userName %>" hidden />
+            <input type="text" name="friends" value="<%= userName %>" hidden />
+            <div class="mb-3">
+              <label for="groupName" class="form-label">Group Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="groupName"
+                placeholder="Enter group name"
+                name="groupName"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="friendsSelect" class="form-label"
+                >Select Friends</label
+              >
+              <div class="list-group">
+                <% if(friends.length>0){ %> <% friends.forEach(friend=>{ %>
+                <div class="list-group-item">
+                  <input
+                    type="checkbox"
+                    id="friend1"
+                    name="friends"
+                    value="<%= friend.friend1===userName ? friend.friend2:friend.friend1;
+                  %>"
+                  />
+                  <label for="friend1">
+                    <%= friend.friend1===userName ?
+                    friend.friend2:friend.friend1; %>
+                  </label>
+                </div>
+                <%})} %>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Group</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

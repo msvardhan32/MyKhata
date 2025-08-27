@@ -1,0 +1,41 @@
+body {
+  background-color: #f8f9fa;
+}
+.navbar-brand {
+  font-weight: bold;
+  color: #007bff;
+}
+.nav-link {
+  color: #007bff !important;
+}
+.redirect-card {
+  margin: 1rem;
+  padding: 2rem;
+  text-align: center;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+.redirect-card:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+.row > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .col-12 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
