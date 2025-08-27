@@ -24,6 +24,7 @@ User-Friendly UI – Clean, intuitive interface for efficient navigation and man
 # How to run
 
 git clone https://github.com/msvardhan32/MyKhata
+
 cd mykhata
 
 
