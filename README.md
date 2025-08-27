@@ -33,7 +33,9 @@ npm install
 
 
 PORT=5000
+
 MONGO_URI=your-mongodb-uri
+
 SESSION_SECRET=your-secret-key
 
 
